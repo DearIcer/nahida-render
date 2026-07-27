@@ -1,0 +1,16 @@
+[gd_resource type="ShaderMaterial" load_steps=4 format=3]
+
+[ext_resource type="Shader" path="res://shaders/rim.gdshader" id="1"]
+[ext_resource type="Texture2D" path="res://assets/textures/Avatar_Loli_Catalyst_Nahida_Tex_Face_Diffuse.png" id="2"]
+[ext_resource type="Material" path="res://materials/mat_brow_overlay.tres" id="3"]
+
+[resource]
+resource_name = "Rim_Brow"
+render_priority = 1
+next_pass = ExtResource("3")
+shader = ExtResource("1")
+shader_parameter/base_map = ExtResource("2")
+shader_parameter/rim_offset = 5.0
+shader_parameter/rim_threshold = 0.5
+shader_parameter/rim_intensity = 0.5
+shader_parameter/base_color = Color(0.9764706, 0.80103135, 0.76164705, 1)

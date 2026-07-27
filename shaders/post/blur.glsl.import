@@ -1,0 +1,14 @@
+[remap]
+
+importer="glsl"
+type="RDShaderFile"
+uid="uid://2e5vwp8s3yb"
+path="res://.godot/imported/blur.glsl-bc3ca2d9d7fe5ca89b2f3b4e9111b6bd.res"
+
+[deps]
+
+source_file="res://shaders/post/blur.glsl"
+dest_files=["res://.godot/imported/blur.glsl-bc3ca2d9d7fe5ca89b2f3b4e9111b6bd.res"]
+
+[params]
+

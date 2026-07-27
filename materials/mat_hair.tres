@@ -1,0 +1,45 @@
+[gd_resource type="ShaderMaterial" load_steps=10 format=3]
+
+[ext_resource type="Shader" path="res://shaders/toon.gdshader" id="1"]
+[ext_resource type="Texture2D" path="res://assets/textures/Avatar_Loli_Catalyst_Nahida_Tex_Hair_Diffuse.png" id="2"]
+[ext_resource type="Texture2D" path="res://assets/textures/Avatar_Loli_Catalyst_Nahida_Tex_Hair_Lightmap.png" id="3"]
+[ext_resource type="Texture2D" path="res://assets/textures/Avatar_Loli_Catalyst_Nahida_Tex_Hair_Normalmap.png" id="4"]
+[ext_resource type="Texture2D" path="res://assets/textures/Avatar_Loli_Catalyst_Nahida_Tex_Hair_Shadow_Ramp.png" id="5"]
+[ext_resource type="Texture2D" path="res://assets/textures/Avatar_Tex_MetalMap.png" id="6"]
+[ext_resource type="Texture2D" path="res://assets/textures/white.png" id="7"]
+[ext_resource type="Texture2D" path="res://assets/textures/white.png" id="8"]
+[ext_resource type="Material" path="res://materials/outline_hair.tres" id="9"]
+
+[resource]
+resource_name = "Nahida_Hair"
+next_pass = ExtResource("9")
+shader = ExtResource("1")
+shader_parameter/base_map = ExtResource("2")
+shader_parameter/light_map = ExtResource("3")
+shader_parameter/normal_map = ExtResource("4")
+shader_parameter/shadow_ramp = ExtResource("5")
+shader_parameter/metal_map = ExtResource("6")
+shader_parameter/face_light_map = ExtResource("7")
+shader_parameter/face_shadow_tex = ExtResource("8")
+shader_parameter/is_day = true
+shader_parameter/light_direction_multiplier = Vector3(1, 0.5, 1)
+shader_parameter/shadow_offset = 0.1
+shader_parameter/shadow_smoothness = 0.4
+shader_parameter/shadow_color = Vector3(1.1, 1.1, 1.1)
+shader_parameter/use_custom_material_type = false
+shader_parameter/custom_material_type = 1.0
+shader_parameter/use_emission = true
+shader_parameter/emission_intensity = 0.2
+shader_parameter/use_normal_map = true
+shader_parameter/is_face = false
+shader_parameter/face_shadow_offset = 0.0
+shader_parameter/face_blush_color = Color(1, 0.72156864, 0.69803923, 1)
+shader_parameter/face_blush_strength = 0.0
+shader_parameter/use_specular = true
+shader_parameter/specular_smoothness = 5.0
+shader_parameter/nonmetallic_intensity = 0.3
+shader_parameter/metallic_intensity = 8.0
+shader_parameter/use_rim = false
+shader_parameter/rim_offset = 5.0
+shader_parameter/rim_threshold = 0.5
+shader_parameter/rim_intensity = 0.5

@@ -1,0 +1,62 @@
+[gd_scene format=3 uid="uid://nahidamain"]
+
+[ext_resource type="Script" uid="uid://r8ol68xkcpw7" path="res://scripts/capture.gd" id="1"]
+[ext_resource type="Script" uid="uid://c5ski1ygqdphw" path="res://scripts/fly_camera.gd" id="2"]
+[ext_resource type="Script" uid="uid://lpn3ydvjo2ok" path="res://scripts/main_light.gd" id="3"]
+[ext_resource type="PackedScene" uid="uid://nahidachar" path="res://scenes/nahida.tscn" id="4"]
+[ext_resource type="Shader" uid="uid://ctm7hai1rnvcv" path="res://shaders/gradient_sky.gdshader" id="5"]
+[ext_resource type="Script" uid="uid://8nngxnlia3l7" path="res://scripts/genshin_post_effect.gd" id="6"]
+
+[sub_resource type="ShaderMaterial" id="SkyMat_1"]
+shader = ExtResource("5")
+shader_parameter/top_color = Vector3(0.155, 0.247, 0.429)
+shader_parameter/horizon_color = Vector3(0.8, 0.88, 0.98)
+shader_parameter/ground_color = Vector3(0.143, 0.122, 0.112)
+
+[sub_resource type="Sky" id="Sky_1"]
+sky_material = SubResource("SkyMat_1")
+
+[sub_resource type="Environment" id="Environment_1"]
+background_mode = 2
+sky = SubResource("Sky_1")
+glow_enabled = false
+glow_levels/1 = 0.5
+glow_levels/2 = 0.7
+glow_levels/3 = 0.9
+glow_levels/4 = 1.0
+glow_intensity = 0.8
+glow_hdr_threshold = 0.7
+
+[sub_resource type="CompositorEffect" id="GenshinPost_1"]
+resource_local_to_scene = false
+resource_name = ""
+enabled = true
+effect_callback_type = 4
+needs_motion_vectors = false
+needs_normal_roughness = false
+script = ExtResource("6")
+
+[sub_resource type="Compositor" id="Compositor_1"]
+compositor_effects = Array[CompositorEffect]([SubResource("GenshinPost_1")])
+
+[node name="Main" type="Node3D" unique_id=1891320329]
+script = ExtResource("1")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=2079183232]
+environment = SubResource("Environment_1")
+compositor = SubResource("Compositor_1")
+
+
+
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=527464728]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.81, 1.8)
+fov = 43.0
+script = ExtResource("2")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1502269268]
+script = ExtResource("3")
+direction_to_light = Vector3(0.383, 0.866, 0.321)
+
+[node name="Nahida" parent="." unique_id=1426823740 instance=ExtResource("4")]
+

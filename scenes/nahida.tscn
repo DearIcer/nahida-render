@@ -1,0 +1,41 @@
+[gd_scene load_steps=12 format=3 uid="uid://nahidachar"]
+
+[ext_resource type="Script" path="res://scripts/face_direction_updater.gd" id="1"]
+[ext_resource type="PackedScene" uid="uid://bege0tmkwwdae" path="res://assets/models/Avatar_Loli_Catalyst_Nahida.fbx" id="2"]
+[ext_resource type="Material" path="res://materials/mat_hair.tres" id="3"]
+[ext_resource type="Material" path="res://materials/mat_body.tres" id="4"]
+[ext_resource type="Material" path="res://materials/mat_dress1.tres" id="5"]
+[ext_resource type="Material" path="res://materials/mat_dress2.tres" id="6"]
+[ext_resource type="Material" path="res://materials/mat_face.tres" id="7"]
+[ext_resource type="Material" path="res://materials/mat_brow.tres" id="8"]
+[ext_resource type="Material" path="res://materials/mat_brow_overlay.tres" id="9"]
+
+[node name="Nahida" type="Node3D"]
+script = ExtResource("1")
+skeleton_path = NodePath("Model/Avatar_Loli_Catalyst_Nahida_Manekin/Skeleton3D")
+head_bone_name = "Bip001 Head"
+head_direction = Vector3(0, 1, 0)
+face_materials = [ExtResource("7"), ExtResource("8"), ExtResource("9")]
+
+[node name="Model" parent="." instance=ExtResource("2")]
+
+[node name="Body" parent="Model/Avatar_Loli_Catalyst_Nahida_Manekin/Skeleton3D"]
+surface_material_override/0 = ExtResource("3")
+surface_material_override/1 = ExtResource("4")
+surface_material_override/2 = ExtResource("5")
+surface_material_override/3 = ExtResource("6")
+
+[node name="Brow" parent="Model/Avatar_Loli_Catalyst_Nahida_Manekin/Skeleton3D"]
+surface_material_override/0 = ExtResource("8")
+
+[node name="EffectMesh" parent="Model/Avatar_Loli_Catalyst_Nahida_Manekin/Skeleton3D"]
+visible = false
+
+[node name="EyeStar" parent="Model/Avatar_Loli_Catalyst_Nahida_Manekin/Skeleton3D"]
+visible = false
+
+[node name="Face" parent="Model/Avatar_Loli_Catalyst_Nahida_Manekin/Skeleton3D"]
+surface_material_override/0 = ExtResource("7")
+
+[node name="Face_Eye" parent="Model/Avatar_Loli_Catalyst_Nahida_Manekin/Skeleton3D"]
+surface_material_override/0 = ExtResource("7")
