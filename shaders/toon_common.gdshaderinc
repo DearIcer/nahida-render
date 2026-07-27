@@ -82,10 +82,12 @@ float get_face_shadow(vec2 uv, vec3 light_dir) {
 	vec3 f = safe_normalize(vec3(face_direction.x, 0.0, face_direction.z));
 	vec3 l = safe_normalize(vec3(light_dir.x, 0.0, light_dir.z));
 	float fdotl = dot(f, l);
-	float fcrossl = cross(f, l).y;
+	// Unity 与 Godot 世界互为 X 镜像（反射）：dot 在反射下不变，但 cross 的 y 分量变号，
+	// 因此 SDF 翻面条件必须与 Unity 反号，否则侧光时脸部阴影左右颠倒
+	float fcrossl = -cross(f, l).y;
 
 	vec2 shadow_uv = uv;
-	// 与 Unity 一致：light 从角色左侧来时翻转 SDF 贴图（已验证与 Unity 渲染结果同侧）
+	// light 从角色左侧来时翻转 SDF 贴图（条件与 Unity 反号，见上方 fcrossl 注释）
 	shadow_uv.x = mix(shadow_uv.x, 1.0 - shadow_uv.x, step(0.0, fcrossl));
 	float face_shadow_map = texture(face_light_map, shadow_uv).r;
 	float face_shadow_val = step(-0.5 * fdotl + 0.5 + face_shadow_offset, face_shadow_map);

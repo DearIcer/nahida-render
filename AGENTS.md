@@ -19,7 +19,10 @@ Godot 4.7 项目：仿原神卡通渲染（纳西妲），逐行移植自 Unity 
 - **着色器内计算的 UV（Ramp 行号、matcap）必须翻转 V**（Unity 纹理原点左下，
   Godot 左上；网格 UV 采样则无需处理）。
 - **网格法线 X、Z 均与 Unity 相反**（FBX 导入轴转换，骨骼朝向不受影响）：身体
-  光照用 `light_dir_body = (-L.x, L.y, -L.z)`，脸部 SDF 用原光向。
+  光照用 `light_dir_body = (-L.x, L.y, -L.z)`，脸部 SDF 用原光向。注意 Unity 与
+  Godot 世界互为 X 镜像（反射）：`dot(F,L)` 不变，但 `cross(F,L).y` 变号，因此
+  脸部 SDF 翻面条件必须与 Unity **反号**（`fcrossl = -cross(f,l).y`），否则侧光时
+  脸部阴影左右颠倒（默认顶光下差异极小，需用侧光验证）。
 - 着色器内置矩阵（`VIEW_MATRIX`、`PROJECTION_MATRIX` 等）只能直接在
   `vertex()/fragment()` 里用，需传入自定义函数（否则编译报错）。
 - 改 `.gdshaderinc` 后渲染未变 → 删 `.godot/shader_cache`。
@@ -27,7 +30,11 @@ Godot 4.7 项目：仿原神卡通渲染（纳西妲），逐行移植自 Unity 
 - 主光方向通过全局 shader uniform `main_light_direction` 传递
   （在 `project.godot [shader_globals]` 中声明，编辑器编译期必须存在；
   `global_shader_parameter_get` 仅编辑器可用，运行时用 `set`）。
+  编辑器里旋转 DirectionalLight3D 节点即可实时预览光照变化（脚本 `main_light.gd`
+  检测节点 basis 变化并跟随，节点 +Z 为指向光源方向；未旋转过时沿用
+  `direction_to_light` 导出参数，运行时行为不变）。
 - Unity 批处理参考图：`E:\UnityProject\NahidaRenderProject` 下
   `Assets/Editor/BatchScreenshot.cs`，`Unity.exe -batchmode -projectPath ... -executeMethod BatchScreenshot.Capture`
-  生成 `unity_reference.png` 供逐像素对比。
+  生成 `unity_reference.png` 供逐像素对比；`BatchScreenshot.CaptureSideLight`
+  生成侧光参考 `unity_side_right.png`（验证脸部 SDF 左右方向用，默认顶光下看不出）。
 - 角色模型/贴图为游戏提取资源，仅限学习用途，禁止商用。

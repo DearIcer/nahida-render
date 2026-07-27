@@ -31,7 +31,7 @@ godot -- --capture=res://screenshot.png   # 运行 45 帧后保存截图并退�
 | `materials/` | 对齐 Unity `Nahida_Base.mat` 及其变体的 ShaderMaterial（含描边 next_pass） |
 | `scenes/nahida.tscn` | 纳西妲模型实例 + 材质覆盖 + 脸部朝向更新脚本 |
 | `scenes/main.tscn` | 主场景：相机 / 平行光 / 天空 / 泛光后处理 |
-| `scripts/main_light.gd` | 每帧把主光方向写入全局 uniform `main_light_direction`（可绕 Y 旋转） |
+| `scripts/main_light.gd` | 每帧把主光方向写入全局 uniform `main_light_direction`（可绕 Y 旋转；编辑器里旋转 DirectionalLight3D 节点即实时预览） |
 | `scripts/face_direction_updater.gd` | 对应 Unity `MaterialUpdater`，从头骨骼写入 `face_direction` |
 | `tools/smooth_normal_import.gd` | FBX 导入后处理：生成切线空间平滑法线存入 CUSTOM0（对应 Unity 的 `Nahida_Body_Smooth.mesh` TEXCOORD7） |
 | `assets/` | 模型与贴图（来自 Unity 工程，仅学习用途，禁止商用） |
