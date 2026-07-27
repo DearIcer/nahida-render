@@ -1,15 +1,32 @@
 # NahidaRender (Godot 版)
 
-在 Godot 4.7 中一比一复刻 Unity 工程 [NahidaRenderProject](../)（`E:\UnityProject\NahidaRenderProject`）
-的原神卡通渲染效果。渲染核心（URPGenshinToon 着色器）逐行移植自 Unity URP HLSL。
+在 Godot 4.7 中一比一复刻原神卡通渲染效果（纳西妲）。渲染核心逐行移植自 Unity URP
+工程 [NahidaRenderProject](https://github.com/kaze-mio/NahidaRenderProject) 的
+`URPGenshinToon` 着色器与 `URPGenshinPostProcess` 后处理链。
 
 ![效果](screenshot.png)
+
+## 鸣谢
+
+本项目特别感谢 **[kaze-mio/NahidaRenderProject](https://github.com/kaze-mio/NahidaRenderProject)**：
+全部渲染算法（卡通着色、脸部 SDF 阴影、描边、后处理）、材质参数与角色资源均以该
+Unity 工程为蓝本，本仓库只是它在 Godot 引擎上的逐行移植/学习性复刻。其上游参考：
+
+- [UnityGenshinToonShader](https://github.com/kaze-mio/UnityGenshinToonShader)
+- [UnityGenshinPostProcessing](https://github.com/kaze-mio/UnityGenshinPostProcessing)
+
+## 声明
+
+角色模型与贴图为游戏提取资源，**仅限学习用途，禁止商用**。本项目与原神官方无关。
 
 ## 运行
 
 用 Godot **4.7**（.NET/Mono 版或标准版均可）打开本目录，直接运行主场景
 `scenes/main.tscn`。鼠标点击画面锁定视角：**WASD** 移动、**Q/E** 升降、
 **Esc** 释放鼠标。
+
+编辑器预览：直接旋转场景中的 DirectionalLight3D 节点，卡通光照（含脸部 SDF
+阴影）会实时跟随，无需运行游戏。
 
 无头导入 / 截图验证：
 
@@ -40,8 +57,9 @@ godot -- --capture=res://screenshot.png   # 运行 45 帧后保存截图并退�
 
 - **阴影**：Lightmap G 通道 × 顶点色 R 作为 AO，Half-Lambert 阶梯阴影 + ShadowRamp
   分档采样（材质 ID 来自 Lightmap A 通道，`_UseCustomMaterialType` 时取自定义值）。
-- **脸部 SDF 阴影**：`face_light_map` + `face_shadow_tex`，光照方向绕 Y 扫掠，
-  与 Unity 公式完全一致（含 UV 镜像侧选择，已逐像素验证同侧）。
+- **脸部 SDF 阴影**：`face_light_map` + `face_shadow_tex`，光照方向绕 Y 扫掠。
+  公式与 Unity 一致，唯 SDF 翻面条件须反号（见下文坐标约定差异），
+  已用侧光参考图逐像素验证左右方向。
 - **高光**：Blinn-Phong + MetalMap matcap（非金属 / 金属按 Lightmap R 切换，
   MetalMap 为 sRGB 贴图 `Avatar_Tex_MetalMap.png`）。
 - **自发光**：`albedo × emission_intensity × base_map.a`。
@@ -60,26 +78,25 @@ godot -- --capture=res://screenshot.png   # 运行 45 帧后保存截图并退�
 ## 贴图导入要求（与 Unity `enableMipMap: 0` 对齐）
 
 Unity 对全部角色贴图关闭了 mipmap，否则 256×20 的 ShadowRamp 会在低 mip 下
-把多行颜色混成灰色（表现为“阴影颜色发灰”）。本项目 `assets/textures/*.png.import`
+把多行颜色混成灰色（表现为"阴影颜色发灰"）。本项目 `assets/textures/*.png.import`
 统一设置 `mipmaps/generate=false`，着色器采样用 `filter_linear`（无 mip）。
 色彩空间：Diffuse/Ramp/MetalMap/背景为 sRGB（`source_color`），
 Lightmap/Normal/FaceLightmap/FaceShadow 线性采样。
 
 ## Unity 与 Godot 的坐标/纹理约定差异（重要）
 
-- **纹理 V 原点**：Unity 在左下，Godot 在左上。网格 UV 采样两边天然一致，
-  但着色器内计算的 UV（ShadowRamp 行号、matcap）必须翻转 V（`uv.y = 1.0 - uv.y`）。
+- **纹理 V 原点**：Unity 在左下，Godot 在左上。对网格 UV 采样（Diffuse/Lightmap
+  等）两边天然一致（Unity 导入时翻转了 mesh.uv 的 V），但**着色器里计算出的 UV**
+  （ShadowRamp 的行号、matcap 坐标）必须翻转 V（`uv.y = 1.0 - uv.y`），
+  否则 ShadowRamp 会采到镜像行——脸部阴影会变成灰薰衣草色而非暖粉色。
 - **法线绕 Y 旋转 180°**：FBX 导入的轴转换使网格顶点法线的 X、Z 均与 Unity
   相反，而骨骼朝向（脸部 SDF 用的 `face_direction`）不受影响。因此身体
   half-lambert 与高光使用 XZ 翻转后的光向 `light_dir_body = (-L.x, L.y, -L.z)`，
   脸部 SDF 路径保持原光向。
-
-## Unity 与 Godot 的纹理 V 原点差异（重要）
-
-Unity 纹理原点在**左下**，Godot 在**左上**。对网格 UV 采样（Diffuse/Lightmap 等）
-两边天然一致（Unity 导入时翻转了 mesh.uv 的 V），但**着色器里计算出的 UV**
-（ShadowRamp 的行号、matcap 坐标）必须翻转 V（`uv.y = 1.0 - uv.y`），
-否则 ShadowRamp 会采到镜像行——脸部阴影会变成灰薰衣草色而非暖粉色。
+- **两边世界互为 X 镜像（反射）**：`dot(F, L)` 在反射下不变，但
+  `cross(F, L).y` 变号。脸部 SDF 的贴图翻面条件因此必须与 Unity **反号**
+  （`fcrossl = -cross(f, l).y`），否则侧光时脸部阴影左右颠倒——默认顶光下
+  差异极小，务必用侧光验证。
 
 ## 后处理（逐 pass 复刻）
 

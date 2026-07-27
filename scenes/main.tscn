@@ -52,7 +52,7 @@ fov = 43.0
 script = ExtResource("2")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1502269268]
-transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, 0, 0, 1.2265804)
+transform = Transform3D(0.6273785, 0, 0.77871436, 0, 1, 0, -0.77871436, 0, 0.6273785, 0, 0, 1.2265804)
 script = ExtResource("3")
 
 [node name="Nahida" parent="." unique_id=1426823740 instance=ExtResource("4")]
