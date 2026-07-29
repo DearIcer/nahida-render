@@ -28,13 +28,6 @@ Unity 工程为蓝本，本仓库只是它在 Godot 引擎上的逐行移植/学
 编辑器预览：直接旋转场景中的 DirectionalLight3D 节点，卡通光照（含脸部 SDF
 阴影）会实时跟随，无需运行游戏。
 
-无头导入 / 截图验证：
-
-```bash
-godot --headless --import
-godot -- --capture=res://screenshot.png   # 运行 45 帧后保存截图并退出
-```
-
 ## 目录结构
 
 | 路径 | 内容 |
